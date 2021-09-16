@@ -3,8 +3,8 @@ import Game from './scenes/game';
 
 export default {
 	type: Phaser.AUTO,
-	width: 600,
-	height: 800,
+	width: 350,
+	height: 550,
 	backgroundColor: "#fdeaf5",
 	physics: {
 		default: 'arcade',
