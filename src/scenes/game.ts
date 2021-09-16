@@ -16,6 +16,7 @@ export default class Game extends Phaser.Scene {
   // static width:any;
 
   preload() {
+    this.load.image('background', './assets/background.png')
     this.load.image('mainBallBlue', './assets/blue.png')
     this.load.image('mainBallpink', './assets/pink80.png')
     this.load.image('ballBlue', './assets/blue60.png')
@@ -24,7 +25,7 @@ export default class Game extends Phaser.Scene {
 
   create() {
     console.log('Enter Create Method');
-    // Game.width=this.game.canvas.width;
+    this.add.image(173, 275, 'background');
     this.scoreText = this.add.text(16, 16, `score: ${this.score}`, { fontSize: '32px', color: '#000' });
     this.mainBall = this.physics.add.image(170, 275, "mainBallBlue");
     this.mainBall.data = 'Blue'
