@@ -10,6 +10,7 @@ export default class Game extends Phaser.Scene {
   private gameOver: boolean = false;
   private score: integer = 0;
   private scoreText: any;
+  private gameOverText: any;
   private directionSelection: any;
   private onMouseTapStatus: boolean = true;
   // static width:any;
@@ -78,9 +79,7 @@ export default class Game extends Phaser.Scene {
           this.gameOver = true;
           console.log("game over ", this.gameOver);
           this.ball.disableBody(true, true);
-          this.scoreText = this.add.text(160, 500, `Game Over\nscore: ${this.score}`, { fontSize: '42px', color: '#000' });
-          // this.scene.stop();
-          // this.scene.resume('HelloWorldScene');
+          this.gameOverText = this.add.text(90, 500, `\t\t\tGame Over\n\t\t\t\tscore: ${this.score}\n\nTap to play again`, { fontSize: '42px', color: '#000' });
         }
       },
       undefined,
@@ -105,6 +104,14 @@ export default class Game extends Phaser.Scene {
       } else {
         this.mainBall.setTexture('mainBallBlue');
         this.mainBall.data = 'Blue'
+      }
+      if (this.gameOver) {
+        this.gameOver = false;
+        console.log("Game restarted ", this.gameOver);
+        this.score=0;
+        this.gameOverText.setText(``);
+        this.scoreText.setText(`score: ${this.score}`);
+        this.createBall();
       }
       this.ontapStatus = !this.ontapStatus;
     }
