@@ -110,7 +110,6 @@ export default class Game extends Phaser.Scene {
       onComplete: () => {
         console.log("OnEnd");
         this.onCollition();
-        return 0;
       }
     });
     this.tween.play;

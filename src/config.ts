@@ -7,5 +7,9 @@ export default {
 	width: 540,
 	height: 960,
 	backgroundColor: "#F3F4C0",
+	scale: {
+		mode: Phaser.Scale.ScaleModes.HEIGHT_CONTROLS_WIDTH,
+		autoCenter: Phaser.Scale.Center.CENTER_BOTH,
+	  },
 	scene: [StartScreen,Game]
 };
