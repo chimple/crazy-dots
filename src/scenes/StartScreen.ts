@@ -17,41 +17,40 @@ export default class StartScreen extends Phaser.Scene {
     preload() {
         this.load.image('gameName', './assets/GameName.png')
         this.load.image('playButton', './assets/PlayButton.png')
-        this.scene.stop('Game');
     }
     create() {
         this.add
-            .image(this.width * 0.33, this.height * 0.02, "gameName")
+            .image(this.width * 0.50, this.height * 0.02, "gameName")
             .setOrigin(0.5, 0)
             .setScale(0.4);
         this.add
-            .text(this.width * 0.33, this.height * 0.25, "Score")
-            .setFontSize(50)
+            .text(this.width * 0.50, this.height * 0.45, "Score")
+            .setFontSize(60)
             .setColor("#000000")
             //   .setFontStyle("bold")
             .setFontFamily("agencyr")
             .setOrigin(0.5, 0);
         this.add
-            .text(this.width * 0.33, this.height * 0.30, this.score ?? "00")
+            .text(this.width * 0.50, this.height * 0.50, this.score ?? "00")
+            .setFontSize(50)
+            .setFontFamily("agencyr")
+            .setColor("#000000")
+            .setOrigin(0.5, 0);
+        this.add
+            .text(this.width * 0.50, this.height * 0.65, "Best Score")
             .setFontSize(40)
-            .setFontFamily("agencyr")
-            .setColor("#000000")
-            .setOrigin(0.5, 0);
-        this.add
-            .text(this.width * 0.33, this.height * 0.37, "Best Score")
-            .setFontSize(30)
             .setColor("#000000")
             .setFontFamily("agencyr")
             .setOrigin(0.5, 0);
         this.add
-            .text(this.width * 0.33, this.height * 0.40, localStorage.getItem("highestScore") ?? "0")
-            .setFontSize(30)
+            .text(this.width * 0.50, this.height * 0.70, localStorage.getItem("highestScore") ?? "0")
+            .setFontSize(40)
             .setFontFamily("agencyr")
             .setColor("#000000")
             .setOrigin(0.5, 0);
 
         this.add
-            .image(this.width * 0.33, this.height * 0.45, "playButton")
+            .image(this.width * 0.50, this.height * 0.84, "playButton")
             .setOrigin(0.5, 0)
             .setScale(0.4)
             .setInteractive()
@@ -68,10 +67,10 @@ export default class StartScreen extends Phaser.Scene {
                 this
             );
         this.add
-            .text(this.width * 0.33, this.height * 0.455,
+            .text(this.width * 0.50, this.height * 0.85,
                 `Tap to ${this.isGameOver === true ? "Re" : ""}start`
             )
-            .setFontSize(35)
+            .setFontSize(45)
             .setColor("#FFFFFF")
             .setFontFamily("agencyr")
             .setOrigin(0.5, 0)
