@@ -20,6 +20,7 @@ export default class Game extends Phaser.Scene {
   private height: any = 960;//GAME_HEIGHT;
   private speed: number = 1500;
   private highScore: any;
+  private tweenMainBall: any;
 
   preload() {
     // this.load.image('background', './assets/background.png')
@@ -66,24 +67,32 @@ export default class Game extends Phaser.Scene {
         ? 0
         : localStorage.getItem('highestScore');
 
-    // this.tweenMainBall = this.tweens.add({
-    //   targets: this.mainBall,
-    //   x: { value: this.width / 2 - Phaser.Math.Between(10,20) },
-    //   y: { value: this.height / 2 - Phaser.Math.Between(150,200) },
-    //   duration: 1000,
-    //   ease: 'Linear',
-    //   repeat: -1,
-    //   // ease: Phaser.Easing.Bounce.InOut,
-    //   // onStart: true,
-    //   // yoyo: true,
-    //   // onComplete: () => {
-    //   //   console.log("OnEnd");
-    //   //   this.onCollition();
-    //   // }
-    // });
-    // this.tweenMainBall.play;
+    this.ballsTween();
+
     this.createBall();
     console.log(this);
+  }
+  ballsTween() {
+    this.tweens.add({
+      targets: this.mainBall,
+      onComplete: () => {
+        this.ballsTween();
+        this.tween.play;
+      },
+      props: {
+        x: {
+          value: this.randomNumberPicker(this.width / 1.7, this.width / 2),
+          duration: 2000
+        },
+        y: {
+          value: this.randomNumberPicker(this.height / 1.7, this.height / 2),
+          duration: 1500
+        },
+      },
+    }).play;
+  }
+  randomNumberPicker(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   createBall() {
     console.log('Enter CreateBall Method');
@@ -112,7 +121,6 @@ export default class Game extends Phaser.Scene {
         this.onCollition();
       }
     });
-    this.tween.play;
   }
   onCollition() {
     console.log('OnCollition Method Enterd');
@@ -121,14 +129,14 @@ export default class Game extends Phaser.Scene {
       this.score++;
       console.log('this.score++ ', this.score);
       this.scoreBoard.setText(`score: ${this.score}`);
-      this.speed = this.speed - 20;
+      if (this.speed >= 950)
+        this.speed = this.speed - 20;
       this.createBall();
     } else {
       console.log("diff color");
       this.gameOver = true;
       console.log("GameOver setted ", this.gameOver);
       if (this.gameOver) {
-        // this.gameOver = false;
         if (Number(this.highScore) < this.score) {
           localStorage.setItem('highestScore', this.score.toString());
           this.highScore = this.score;
@@ -155,14 +163,6 @@ export default class Game extends Phaser.Scene {
           this.scene.remove("Game");
           console.log("Game Scence removed");
         }, 1000);
-        // setTimeout(() => {
-        //   this.gameOver = false;
-        //   console.log("Game restarted ", this.gameOver);
-        //   this.score = 0;
-        //   this.gameOverText.setText(``);
-        //   this.scoreBoard.setText(`score: ${this.score}`);
-        //   this.createBall();
-        // }, 1000);
       }
     }
   }
