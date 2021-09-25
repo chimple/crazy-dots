@@ -31,7 +31,7 @@ export default class StartScreen extends Phaser.Scene {
             .setFontFamily("agencyr")
             .setOrigin(0.5, 0);
         this.add
-            .text(this.width * 0.50, this.height * 0.50, this.score ?? "00")
+            .text(this.width * 0.50, this.height * 0.51, this.score ?? "00")
             .setFontSize(50)
             .setFontFamily("agencyr")
             .setColor("#000000")

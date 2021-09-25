@@ -81,11 +81,11 @@ export default class Game extends Phaser.Scene {
       },
       props: {
         x: {
-          value: this.randomNumberPicker(this.width / 1.7, this.width / 2),
+          value: this.randomNumberPicker(this.width / 1.85, this.width / 2.15),
           duration: 2000
         },
         y: {
-          value: this.randomNumberPicker(this.height / 1.7, this.height / 2),
+          value: this.randomNumberPicker(this.height / 1.85, this.height / 2.15),
           duration: 1500
         },
       },
