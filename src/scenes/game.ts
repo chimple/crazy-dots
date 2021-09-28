@@ -16,7 +16,6 @@ export default class Game extends Phaser.Scene {
   private height: any = 960;//GAME_HEIGHT;
   private speed: number = 1500;
   private highScore: any;
-  private tweenMainBall: any;
 
   preload() {
     this.load.image('mainBallBlue', './assets/blue.png')
@@ -30,10 +29,11 @@ export default class Game extends Phaser.Scene {
     this.mainBall = this.add.image(this.width / 2, this.height / 2, "mainBallBlue")
     this.mainBall.data = 'Blue'
     this.scoreBoard = this.add.text(
-      this.width / 3.5,
+      this.width / 2.5,
       this.height * 0.06,
       `Score: ${this.score}`,
       {
+        fontFamily:"agencyr",
         fontSize: "52px",
         fontStyle: "bold",
         color: "#fffff",
@@ -129,8 +129,10 @@ export default class Game extends Phaser.Scene {
     if (this.mainBall.data == this.ball.data) {
       this.score++;
       console.log('this.score++ ', this.score);
-      this.scoreBoard.setText(`score: ${this.score}`);
-      if (this.speed >= 950)
+      this.scoreBoard.setText(`Score: ${this.score}`);
+      if (this.speed >= 850)
+        this.speed = this.speed - 40;
+      else if (this.speed >= 500 && this.score >= 50)
         this.speed = this.speed - 40;
       this.createBall();
     } else {
