@@ -1,7 +1,3 @@
-// import Phaser from 'phaser';
-
-import StartScreen from "./StartScreen";
-
 export default class Game extends Phaser.Scene {
   constructor() {
     super("Game");
@@ -23,7 +19,6 @@ export default class Game extends Phaser.Scene {
   private tweenMainBall: any;
 
   preload() {
-    // this.load.image('background', './assets/background.png')
     this.load.image('mainBallBlue', './assets/blue.png')
     this.load.image('mainBallpink', './assets/pink80.png')
     this.load.image('ballBlue', './assets/blue60.png')
@@ -33,24 +28,6 @@ export default class Game extends Phaser.Scene {
   create() {
     console.log('Enter Create Method');
     this.mainBall = this.add.image(this.width / 2, this.height / 2, "mainBallBlue")
-      .setInteractive()
-      .on(
-        "pointerdown",
-        () => {
-          console.log('pointerdown Enterd');
-          if (this.ontapStatus) {
-            this.mainBall.setTexture('mainBallpink');
-            this.mainBall.data = 'Pink'
-            console.log('pointerdown Enterd and mainBall changed to pink');
-          } else {
-            this.mainBall.setTexture('mainBallBlue');
-            this.mainBall.data = 'Blue'
-            console.log('pointerdown Enterd and mainBall changed to blue');
-          }
-          this.ontapStatus = !this.ontapStatus;
-        },
-        this
-      );
     this.mainBall.data = 'Blue'
     this.scoreBoard = this.add.text(
       this.width / 3.5,
@@ -70,29 +47,26 @@ export default class Game extends Phaser.Scene {
     this.ballsTween();
 
     this.createBall();
+    this.input.on(
+      "pointerdown",
+      () => {
+        if (!this.gameOver) {
+          console.log('pointerdown Enterd');
+          if (this.ontapStatus) {
+            this.mainBall.setTexture('mainBallpink');
+            this.mainBall.data = 'Pink'
+            console.log('pointerdown Enterd and mainBall changed to pink');
+          } else {
+            this.mainBall.setTexture('mainBallBlue');
+            this.mainBall.data = 'Blue'
+            console.log('pointerdown Enterd and mainBall changed to blue');
+          }
+          this.ontapStatus = !this.ontapStatus;
+        }
+      },
+      this
+    );
     console.log(this);
-  }
-  ballsTween() {
-    this.tweens.add({
-      targets: this.mainBall,
-      onComplete: () => {
-        this.ballsTween();
-        this.tween.play;
-      },
-      props: {
-        x: {
-          value: this.randomNumberPicker(this.width / 1.85, this.width / 2.15),
-          duration: 2000
-        },
-        y: {
-          value: this.randomNumberPicker(this.height / 1.85, this.height / 2.15),
-          duration: 1500
-        },
-      },
-    }).play;
-  }
-  randomNumberPicker(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   createBall() {
     console.log('Enter CreateBall Method');
@@ -111,16 +85,43 @@ export default class Game extends Phaser.Scene {
       this.ball.data = 'Pink';
       console.log('this.ballType[ballColorType] ', this.ballType[ballColorType], ' this.ball.data ', this.ball.data);
     }
+    this.incomingBall();
+  }
+  incomingBall() {
     this.tween = this.tweens.add({
       targets: this.ball,
       x: { value: this.mainBall.x },
       y: { value: this.mainBall.y },
       duration: this.speed,
       onComplete: () => {
-        console.log("OnEnd");
-        this.onCollition();
-      }
+        if (!this.gameOver) {
+          console.log("OnEnd");
+          this.onCollition();
+        }
+      },
     });
+  }
+  ballsTween() {
+    this.tweens.add({
+      targets: this.mainBall,
+      onComplete: () => {
+        this.ballsTween();
+        this.tween.play;
+      },
+      props: {
+        x: {
+          value: this.randomNumberPicker(this.width / 1.75, this.width / 2.25),
+          duration: 2000
+        },
+        y: {
+          value: this.randomNumberPicker(this.height / 1.75, this.height / 2.25),
+          duration: 1500
+        },
+      },
+    }).play;
+  }
+  randomNumberPicker(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
   onCollition() {
     console.log('OnCollition Method Enterd');
@@ -130,40 +131,38 @@ export default class Game extends Phaser.Scene {
       console.log('this.score++ ', this.score);
       this.scoreBoard.setText(`score: ${this.score}`);
       if (this.speed >= 950)
-        this.speed = this.speed - 20;
+        this.speed = this.speed - 40;
       this.createBall();
     } else {
       console.log("diff color");
       this.gameOver = true;
       console.log("GameOver setted ", this.gameOver);
-      if (this.gameOver) {
-        if (Number(this.highScore) < this.score) {
-          localStorage.setItem('highestScore', this.score.toString());
-          this.highScore = this.score;
-        }
-        console.log("Game over ", this.gameOver);
-        this.gameOverText = this.add.text(
-          this.width / 2, this.height * 0.70,
-          "\t\t\tGame Over\n\t\tYour score: " + this.score)
-          .setFontSize(50)
-          .setColor("#000000")
-          .setFontStyle("bold")
-          .setFontFamily("Zekton")
-          .setOrigin(0.5);
-        this.tween.stop();
-        console.log("tween stoped and gameovertext displayed");
-        setTimeout(() => {
-          console.log("setTimeout Entered");
-          // this.scene.restart();
-          this.scene.start("StartScreen", {
-            score: this.score,
-            isGameOver: true,
-          });
-          console.log("StartScreen Loaded");
-          this.scene.remove("Game");
-          console.log("Game Scence removed");
-        }, 1000);
+      if (this.gameOver && Number(this.highScore) < this.score) {
+        localStorage.setItem('highestScore', this.score.toString());
+        this.highScore = this.score;
       }
+      console.log("Game over ", this.gameOver);
+      this.gameOverText = this.add.text(
+        this.width / 2, this.height * 0.70,
+        "\t\t\tGame Over\n\t\tYour score: " + this.score)
+        .setFontSize(50)
+        .setColor("#000000")
+        .setFontStyle("bold")
+        .setFontFamily("Zekton")
+        .setOrigin(0.5);
+      this.tween.stop();
+      console.log("tween stoped and gameovertext displayed");
+      setTimeout(() => {
+        console.log("setTimeout Entered");
+        // this.scene.restart();
+        this.scene.start("StartScreen", {
+          score: this.score,
+          isGameOver: true,
+        });
+        console.log("StartScreen Loaded");
+        this.scene.remove("Game");
+        console.log("Game Scence removed");
+      }, 1000);
     }
   }
 }
